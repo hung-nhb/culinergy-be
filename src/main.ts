@@ -9,7 +9,7 @@ async function bootstrap() {
     .setTitle('Culinergy')
     .setDescription('The Culinergy API description')
     .setVersion('1.0')
-    .addTag('cats')
+    // .addTag('culinergy')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
