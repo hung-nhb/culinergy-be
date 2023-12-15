@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
 export type RecipeDocument = HydratedDocument<Recipe>;
 
@@ -10,6 +10,9 @@ export class Recipe {
     required: true,
   })
   name: string;
+
+  @Prop()
+  imageUrl: string;
 
   @Prop()
   description: string;
@@ -26,10 +29,10 @@ export class Recipe {
   tags: string[];
 
   @Prop({
-    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Ingredient' }],
+    type: [{ type: Types.ObjectId, ref: 'Ingredient' }],
     default: [],
   })
-  ingredients: MongooseSchema.Types.ObjectId[];
+  ingredients: Types.ObjectId[];
 
   @Prop()
   instructions: string;
