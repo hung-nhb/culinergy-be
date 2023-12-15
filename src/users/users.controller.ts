@@ -13,8 +13,13 @@ export class UsersController {
 
   @Get('/profile')
   async getUserProfile(@Request() req) {
-    const user = await this.usersService.findOneByEmail(req.user.sub);
+    const user = await this.usersService.findOneByEmail(req.user.sub, { populate: ['allergies'] });
     const { hashedPassword, ...result } = user.toJSON();
     return result;
+  }
+
+  @Put('/profile')
+  async updateUserProfile(@Request() req, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.updateOneByEmail(req.user.sub, updateUserDto);
   }
 }

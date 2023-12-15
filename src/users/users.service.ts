@@ -1,10 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schema/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
+
+interface UserOptions {
+  populate?: string[];
+}
 
 @Injectable()
 export class UsersService {
@@ -34,15 +38,26 @@ export class UsersService {
     return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async updateOneByEmail(email: string, updateUserDto: UpdateUserDto) {
+    const user = await this.userModel.findOne({ email });
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+    
+    return this.userModel.updateOne({ email }, {
+      $set: updateUserDto,
+    }, { new: true });
   }
 
   remove(id: number) {
     return `This action removes a #${id} user`;
   }
 
-  async findOneByEmail(email: string) {
+  async findOneByEmail(email: string, options?: UserOptions) {
+    if (options?.populate) {
+      return this.userModel.findOne({ email }).populate(options.populate);
+    }
+
     return this.userModel.findOne({ email });
   }
 }

@@ -1,4 +1,12 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateUserDto } from './create-user.dto';
+import { ApiProperty, PartialType } from "@nestjs/swagger";
+import { IsBoolean, IsArray } from 'class-validator';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {}
+class UpdateableUserDto {
+  @ApiProperty()
+  isVegan: boolean
+
+  @ApiProperty()
+  allergies: string[]
+}
+
+export class UpdateUserDto extends PartialType(UpdateableUserDto) {}

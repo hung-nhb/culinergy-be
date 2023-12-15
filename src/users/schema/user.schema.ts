@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -16,6 +16,23 @@ export class User {
 
   @Prop()
   name: string;
+
+  @Prop({
+    default: false,
+  })
+  isVegan: boolean;
+
+  @Prop({
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Ingredient' }],
+    default: [],
+  })
+  allergies: MongooseSchema.Types.ObjectId[];
+
+  @Prop({
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Recipe' }],
+    default: [],
+  })
+  favorites: MongooseSchema.Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

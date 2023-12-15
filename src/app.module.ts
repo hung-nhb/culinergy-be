@@ -6,6 +6,7 @@ import { IngredientsModule } from './ingredients/ingredients.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { RecipesModule } from './recipes/recipes.module';
 
 @Module({
   imports: [
@@ -24,6 +25,8 @@ import { MongooseModule } from '@nestjs/mongoose';
       }),
       inject: [ConfigService],
     }),
+
+    RecipesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
