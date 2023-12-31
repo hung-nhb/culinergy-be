@@ -1,12 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
 export type IngredientDocument = HydratedDocument<Ingredient>;
 
 @Schema()
 export class Ingredient {
   @Prop({
-    unique: true,
+    type: Number,
+  })
+  _id: number;
+
+  @Prop({
     required: true,
   })
   name: string;

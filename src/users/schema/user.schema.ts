@@ -23,16 +23,16 @@ export class User {
   isVegan: boolean;
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Ingredient' }],
+    type: [{ type: Number, ref: 'Ingredient' }],
     default: [],
   })
-  allergies: Types.ObjectId[];
+  allergies: number[];
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Recipe' }],
+    type: [{ type: Number, ref: 'Recipe' }],
     default: [],
   })
-  favorites: Types.ObjectId[];
+  favorites: number[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -15,4 +15,9 @@ export class IngredientsController {
   async findAll() {
     return this.ingredientsService.findAll();
   }
+
+  @Get(':id')
+  async findOne(@Param('id') id: number) {
+    return this.ingredientsService.findOne(id);
+  }
 }

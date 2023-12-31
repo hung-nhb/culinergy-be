@@ -34,12 +34,12 @@ export class RecipesController {
   }
 
   @Get('/:recipeId')
-  async getRecipe(@Request() req, @Param('recipeId') recipeId: string) {
+  async getRecipe(@Request() req, @Param('recipeId') recipeId: number) {
     return this.recipesService.getRecipe(req.user.sub, recipeId);
   }
 
   @Put('/:recipeId/favorite')
-  async toggleFavoriteRecipe(@Request() req, @Param('recipeId') recipeId: string) {
+  async toggleFavoriteRecipe(@Request() req, @Param('recipeId') recipeId: number) {
     return this.recipesService.toggleFavoriteRecipe(req.user.sub, recipeId);
   }
 }
