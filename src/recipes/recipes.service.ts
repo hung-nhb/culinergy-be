@@ -55,7 +55,9 @@ export class RecipesService {
     let recipes: RecipeDocument[];
 
     if (query.ofTheDay) {
-      const randomRecipeId = recipeIds[Math.floor(Math.random() * recipeIds.length)]._id;
+      // get a random recipe depending on the hour of the day
+      const hour = new Date().getHours();
+      const randomRecipeId = recipeIds[hour % recipeIds.length]._id;
       recipes = await this.recipeModel.find({ _id: randomRecipeId });
     } else {
       const randomRecipeIds = recipeIds.sort(() => Math.random() - Math.random()).slice(0, 3).map(recipe => recipe._id);
@@ -94,7 +96,11 @@ export class RecipesService {
 
     await user.save();
     await recipe.save();
-    return user.favorites;
+    // return the recipe with the updated favoriteCount, isFavorite
+    return {
+      ...recipe.toJSON(),
+      isFavorite: !isFavorite,
+    };
   }
 
   attachIsFavoriteToRecipes(recipes: RecipeDocument[], favorites: number[]) {
