@@ -3,7 +3,7 @@ version: '1.0.0'
 services:
   nestjs:
     build: ./
-    container_name: nestjs_api
+    container_name: culinergy-be
     environment:
       - PORT=3000
       - JWT_SECRET=927402
