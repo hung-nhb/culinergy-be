@@ -15,7 +15,7 @@ export class RecipesService {
   async getRecipes(email: string, query: RecipeQuery) {
     const filter: FilterQuery<Recipe> = {};
 
-    if (query.ingredients) {
+    if (query.ingredients && query.ingredients.length > 0) {
       // the recipe ingredients must contain all the ingredients in the query
       filter.ingredients = { $all: query.ingredients };
     }
@@ -25,7 +25,10 @@ export class RecipesService {
       filter.name = { $regex: query.name, $options: 'i' };
     }
 
-    const recipes = await this.recipeModel.find(filter);
+    const recipes = await this.recipeModel.find(filter, null, {
+      skip: query.page ? (query.page - 1) * 10 : 0,
+      limit: 10,
+    });
     const user = await this.usersService.findOneByEmail(email);
     const favorites = user.favorites;
     return this.attachIsFavoriteToRecipes(recipes, favorites);
