@@ -8,8 +8,9 @@ export interface RecommendedQuery {
 }
 
 export interface RecipeQuery {
-  ingredients?: string[];
+  ingredients?: number[];
   name?: string;
+  page?: number;
 }
 
 @Controller('recipes')
@@ -21,8 +22,19 @@ export class RecipesController {
   @Get()
   @ApiQuery({ name: 'ingredients', required: false })
   @ApiQuery({ name: 'name', required: false })
-  async getRecipes(@Request() req, @Query() query: RecipeQuery) {
-    return this.recipesService.getRecipes(req.user.sub, query);
+  async getRecipes(@Request() req, @Query() query: { ingredients?: string, name?: string, page?: number }) {
+    // NOTE: this is probably not the best way to parse the query
+    const parsedQuery: RecipeQuery = {};
+    if (query.ingredients) {
+      parsedQuery.ingredients = query.ingredients.split(',').map(Number);
+    }
+    if (query.name) {
+      parsedQuery.name = query.name;
+    }
+    if (query.page) {
+      parsedQuery.page = query.page;
+    }
+    return this.recipesService.getRecipes(req.user.sub, parsedQuery);
   }
 
   @Get('/recommended')
