@@ -22,6 +22,7 @@ export class RecipesController {
   @Get()
   @ApiQuery({ name: 'ingredients', required: false })
   @ApiQuery({ name: 'name', required: false })
+  @ApiQuery({ name: 'page', required: false })
   async getRecipes(@Request() req, @Query() query: { ingredients?: string, name?: string, page?: number }) {
     // NOTE: this is probably not the best way to parse the query
     const parsedQuery: RecipeQuery = {};
