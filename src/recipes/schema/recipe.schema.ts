@@ -6,7 +6,11 @@ export type RecipeDocument = HydratedDocument<Recipe>;
 @Schema()
 export class Recipe {
   @Prop({
-    unique: true,
+    type: Number,
+  })
+  _id: number;
+
+  @Prop({
     required: true,
   })
   name: string;
@@ -29,13 +33,13 @@ export class Recipe {
   tags: string[];
 
   @Prop({
-    type: [{ type: Types.ObjectId, ref: 'Ingredient' }],
+    type: [{ type: Number, ref: 'Ingredient' }],
     default: [],
   })
-  ingredients: Types.ObjectId[];
+  ingredients: number[];
 
   @Prop()
-  instructions: string;
+  instructions: string[];
 }
 
 export const RecipeSchema = SchemaFactory.createForClass(Recipe);

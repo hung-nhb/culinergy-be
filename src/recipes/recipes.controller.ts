@@ -1,5 +1,5 @@
 import { Controller, UseGuards, Get, Post, Body, Param, Query, Put, Request } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { RecipesService } from './recipes.service';
 
@@ -19,11 +19,14 @@ export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
 
   @Get()
+  @ApiQuery({ name: 'ingredients', required: false })
+  @ApiQuery({ name: 'name', required: false })
   async getRecipes(@Request() req, @Query() query: RecipeQuery) {
     return this.recipesService.getRecipes(req.user.sub, query);
   }
 
   @Get('/recommended')
+  @ApiQuery({ name: 'ofTheDay', required: false })
   async getRecommendedRecipes(@Request() req, @Query() query: RecommendedQuery) {
     return this.recipesService.getRecommendedRecipes(req.user.sub, query);
   }
@@ -34,12 +37,12 @@ export class RecipesController {
   }
 
   @Get('/:recipeId')
-  async getRecipe(@Request() req, @Param('recipeId') recipeId: string) {
+  async getRecipe(@Request() req, @Param('recipeId') recipeId: number) {
     return this.recipesService.getRecipe(req.user.sub, recipeId);
   }
 
   @Put('/:recipeId/favorite')
-  async toggleFavoriteRecipe(@Request() req, @Param('recipeId') recipeId: string) {
+  async toggleFavoriteRecipe(@Request() req, @Param('recipeId') recipeId: number) {
     return this.recipesService.toggleFavoriteRecipe(req.user.sub, recipeId);
   }
 }

@@ -12,6 +12,10 @@ export class IngredientsService {
   ) {}
 
   async findAll() {
-    return this.ingredientModel.find();
+    return this.ingredientModel.find({}, { _id: 1, name: 1 });
+  }
+
+  async findOne(id: number) {
+    return this.ingredientModel.findById(id);
   }
 }

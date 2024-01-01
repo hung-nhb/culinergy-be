@@ -31,8 +31,11 @@ export class RecipesService {
     return this.attachIsFavoriteToRecipes(recipes, favorites);
   }
 
-  async getRecipe(email: string, recipeId: string) {
-    const recipe = await this.recipeModel.findById(recipeId).populate('ingredients');
+  async getRecipe(email: string, recipeId: number) {
+    const recipe = await this.recipeModel.findById(recipeId).populate('ingredients', {
+      _id: 1,
+      name: 1,
+    });
 
     if (!recipe) {
       throw new HttpException('Recipe not found', 404);
@@ -52,7 +55,9 @@ export class RecipesService {
     let recipes: RecipeDocument[];
 
     if (query.ofTheDay) {
-      const randomRecipeId = recipeIds[Math.floor(Math.random() * recipeIds.length)]._id;
+      // get a random recipe depending on the hour of the day
+      const hour = new Date().getHours();
+      const randomRecipeId = recipeIds[hour % recipeIds.length]._id;
       recipes = await this.recipeModel.find({ _id: randomRecipeId });
     } else {
       const randomRecipeIds = recipeIds.sort(() => Math.random() - Math.random()).slice(0, 3).map(recipe => recipe._id);
@@ -71,7 +76,7 @@ export class RecipesService {
     return this.attachIsFavoriteToRecipes(recipes, favorites);
   }
 
-  async toggleFavoriteRecipe(email: string, recipeId: string) {
+  async toggleFavoriteRecipe(email: string, recipeId: number) {
     const user = await this.usersService.findOneByEmail(email);
     const recipe = await this.recipeModel.findById(recipeId);
 
@@ -79,10 +84,10 @@ export class RecipesService {
       throw new HttpException('Recipe not found', 404);
     }
 
-    const isFavorite = user.favorites.some(favorite => favorite.toString() === recipeId);
+    const isFavorite = user.favorites.some(favorite => favorite === recipeId);
 
     if (isFavorite) {
-      user.favorites = user.favorites.filter(favorite => favorite.toString() !== recipeId);
+      user.favorites = user.favorites.filter(favorite => favorite !== recipeId);
       recipe.favoriteCount--;
     } else {
       user.favorites.push(recipe._id);
@@ -91,13 +96,17 @@ export class RecipesService {
 
     await user.save();
     await recipe.save();
-    return user.favorites;
+    // return the recipe with the updated favoriteCount, isFavorite
+    return {
+      ...recipe.toJSON(),
+      isFavorite: !isFavorite,
+    };
   }
 
-  attachIsFavoriteToRecipes(recipes: RecipeDocument[], favorites: Types.ObjectId[]) {
+  attachIsFavoriteToRecipes(recipes: RecipeDocument[], favorites: number[]) {
     return recipes.map(recipe => ({
       ...recipe.toJSON(),
-      isFavorite: favorites.some(favorite => favorite.toString() === recipe._id.toString()),
+      isFavorite: favorites.some(favorite => favorite === recipe._id),
     }));
   }
 }
