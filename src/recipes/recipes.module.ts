@@ -4,10 +4,12 @@ import { RecipesController } from './recipes.controller';
 import { UsersModule } from 'src/users/users.module';
 import { Recipe, RecipeSchema } from './schema/recipe.schema';
 import { MongooseModule } from '@nestjs/mongoose';
+import { RecipesGuestService } from './recipes-guest.service';
+import { RecipesGuestController } from './recipes-guest.controller';
 
 @Module({
-  providers: [RecipesService],
-  controllers: [RecipesController],
+  providers: [RecipesService, RecipesGuestService],
+  controllers: [RecipesController, RecipesGuestController],
   imports: [
     UsersModule,
     MongooseModule.forFeature([

@@ -7,7 +7,6 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 
 @Controller('ingredients')
 @ApiTags('ingredients')
-@UseGuards(JwtAuthGuard)
 export class IngredientsController {
   constructor(private readonly ingredientsService: IngredientsService) {}
 
