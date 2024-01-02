@@ -6,7 +6,7 @@ class UpdateableUserDto {
   isVegan: boolean
 
   @ApiProperty()
-  allergies: string[]
+  allergies: number[]
 }
 
 export class UpdateUserDto extends PartialType(UpdateableUserDto) {}
